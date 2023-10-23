@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.mynotes.Posts.MainLayout
 import com.example.mynotes.Posts.Post
+import com.example.mynotes.Posts.PostsFlow
 import com.example.mynotes.Posts.PostsList
 import com.example.mynotes.Posts.PostsListState
 import com.example.mynotes.ui.theme.MyNotesTheme
@@ -16,17 +17,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MyNotesTheme {
-                MainLayout(state = PostsListState(
-                    posts = listOf(
-                        Post(
-                            title = "My post",
-                            description = "This is my first post description. I don't have anything to say."
-                        )
-                    )
-                )
-                ) {
-
-                }
+                PostsFlow()
             }
         }
     }
