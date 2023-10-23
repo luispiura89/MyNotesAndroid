@@ -1,4 +1,4 @@
-package com.example.mynotes.Posts
+package com.example.mynotes.myposts
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.*

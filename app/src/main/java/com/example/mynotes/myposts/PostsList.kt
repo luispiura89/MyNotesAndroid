@@ -1,4 +1,4 @@
-package com.example.mynotes.Posts
+package com.example.mynotes.myposts
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
