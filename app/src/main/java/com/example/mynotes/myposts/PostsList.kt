@@ -97,12 +97,25 @@ fun PostCard(
                 ) {
                     Text(
                         text = post.title,
-                        modifier = modifier.padding(20.dp)
+                        modifier = modifier
+                            .padding(20.dp)
+                            .weight(1f)
                     )
-                    Button(onClick = {
-                        onDeletePost(post)
-                    }) {
-                        Text(text = "Delete")
+                    Row {
+                        Button(
+                            modifier = modifier.padding(end = 5.dp),
+                            onClick = {
+                            }
+                        ) {
+                            Text(text = "Edit")
+                        }
+                        Button(
+                            onClick = {
+                                onDeletePost(post)
+                            }
+                        ) {
+                            Text(text = "Delete")
+                        }
                     }
                 }
                 Divider(
@@ -135,7 +148,7 @@ fun PostPreview() {
             state = PostsListState(
                 posts = listOf(
                     Post(
-                        title = "My post",
+                        title = "This is my first post description. I don't have anything to say.",
                         description = "This is my first post description. I don't have anything to say."
                     )
                 )
