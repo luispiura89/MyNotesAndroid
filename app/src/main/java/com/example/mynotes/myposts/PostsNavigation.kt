@@ -20,21 +20,27 @@ fun PostsFlow() {
     NavHost(navController = navigationController, startDestination = "main") {
         composable(route = "main") {
             MainLayout(state = state,
-                onAddPost = {
-                    navigationController.navigate("add")
-                },
-                onSelectPost = {
-                    navigationController.navigate("detail/${it.title}/${it.description}")
-                },
-                onDeletePost = { post ->
-                    state = state.copy(
-                        posts = state.posts.toMutableList().also {
-                            it.remove(post)
-                        }
-                    )
+            ) { action, post ->
+                when (action) {
+                    PostListAction.ADD -> {
+                        navigationController.navigate("add")
+                    }
+                    PostListAction.REMOVE -> {
+                        state = state.copy(
+                            posts = state.posts.toMutableList().also {
+                                it.remove(post)
+                            }
+                        )
+                    }
+                    PostListAction.SELECT -> {
+                        navigationController.navigate("detail/${post?.title}/${post?.description}")
+                    }
+                    PostListAction.EDIT -> {
+                        navigationController.navigate(
+                            "add?id=${post?.id}&title=${post?.title}&description=${post?.description}"
+                        )
+                    }
                 }
-            ) { post ->
-                navigationController.navigate("add?id=${post.id}&title=${post.title}&description=${post.description}")
             }
         }
         composable(
@@ -59,9 +65,6 @@ fun PostsFlow() {
                     post.id == UUID.fromString(it)
                 }
             } ?: -1
-//            val position = state.posts.indexOfFirst { post ->
-//                post.id == UUID.fromString()
-//            }
             PostForm(
                 title = it.arguments?.getString("title"),
                 description = it.arguments?.getString("description"),

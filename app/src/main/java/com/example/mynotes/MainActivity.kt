@@ -32,10 +32,8 @@ fun GreetingPreview() {
                     Post(title = "first post", description = "This is my first post"),
                     Post(title = "second post", description = "This is my second post"),
                 )
-            ),
-            onSelectPost = {},
-            onDeletePost = {}
-        ) {
+            )
+        ) { action, post ->
 
         }
     }

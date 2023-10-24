@@ -30,10 +30,7 @@ import java.util.UUID
 fun MainLayout(
     modifier: Modifier = Modifier,
     state: PostsListState,
-    onAddPost: () -> Unit,
-    onSelectPost: (Post) -> Unit,
-    onDeletePost: (Post) -> Unit,
-    onEditPost: (Post) -> Unit
+    onAction: (PostListAction, Post?) -> Unit
 ) {
     Column(
         modifier = modifier
@@ -41,7 +38,9 @@ fun MainLayout(
             .padding(horizontal = 20.dp, vertical = 20.dp),
         horizontalAlignment = Alignment.End
     ) {
-        Button(onClick = onAddPost) {
+        Button(onClick = {
+            onAction(PostListAction.ADD, null)
+        }) {
             Text(text = "Add")
         }
         Spacer(modifier = modifier.height(15.dp))
@@ -50,9 +49,7 @@ fun MainLayout(
         } else {
             PostsList(
                 state = state,
-                onSelectPost = onSelectPost,
-                onDeletePost = onDeletePost,
-                onEditPost = onEditPost
+                onAction = onAction
             )
         }
     }
@@ -61,35 +58,33 @@ fun MainLayout(
 @Composable
 fun PostsList(
     state: PostsListState,
-    onSelectPost: (Post) -> Unit,
-    onDeletePost: (Post) -> Unit,
-    onEditPost: (Post) -> Unit
+    onAction: (PostListAction, Post?) -> Unit
 ) {
     LazyColumn {
         items(state.posts) {
             PostCard(
                 post = it,
-                onSelectPost = onSelectPost,
-                onDeletePost = onDeletePost,
-                onEditPost = onEditPost
+                onAction = onAction
             )
         }
     }
 }
 
+enum class PostListAction {
+    ADD, SELECT, EDIT, REMOVE
+}
+
 @Composable
 fun PostCard(
     post: Post, modifier: Modifier = Modifier,
-    onSelectPost: (Post) -> Unit,
-    onDeletePost: (Post) -> Unit,
-    onEditPost: (Post) -> Unit
+    onAction: (PostListAction, Post?) -> Unit
 ) {
     Column {
         Card(
             modifier = modifier
                 .fillMaxWidth()
                 .clickable {
-                    onSelectPost(post)
+                    onAction(PostListAction.SELECT, post)
                 },
             elevation = CardDefaults.cardElevation(5.dp)
         ) {
@@ -111,14 +106,14 @@ fun PostCard(
                         Button(
                             modifier = modifier.padding(end = 5.dp),
                             onClick = {
-                                onEditPost(post)
+                                onAction(PostListAction.EDIT, post)
                             }
                         ) {
                             Text(text = "Edit")
                         }
                         Button(
                             onClick = {
-                                onDeletePost(post)
+                                onAction(PostListAction.REMOVE, post)
                             }
                         ) {
                             Text(text = "Delete")
@@ -161,10 +156,7 @@ fun PostPreview() {
                     )
                 )
             ),
-            onAddPost = {},
-            onSelectPost = {},
-            onDeletePost = {}
-        ) {
+        ) { action, post ->
 
         }
     }
