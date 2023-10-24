@@ -29,11 +29,12 @@ fun GreetingPreview() {
         PostsList(
             PostsListState(
                 posts = listOf(
-                    Post("first post", description = "This is my first post"),
-                    Post("second post", description = "This is my second post"),
+                    Post(title = "first post", description = "This is my first post"),
+                    Post(title = "second post", description = "This is my second post"),
                 )
             ),
-            onSelectPost = {}
+            onSelectPost = {},
+            onDeletePost = {}
         ) {
 
         }

@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.mynotes.ui.theme.MyNotesTheme
+import java.util.UUID
 
 @Composable
 fun MainLayout(
@@ -31,7 +32,8 @@ fun MainLayout(
     state: PostsListState,
     onAddPost: () -> Unit,
     onSelectPost: (Post) -> Unit,
-    onDeletePost: (Post) -> Unit
+    onDeletePost: (Post) -> Unit,
+    onEditPost: (Post) -> Unit
 ) {
     Column(
         modifier = modifier
@@ -49,7 +51,8 @@ fun MainLayout(
             PostsList(
                 state = state,
                 onSelectPost = onSelectPost,
-                onDeletePost = onDeletePost
+                onDeletePost = onDeletePost,
+                onEditPost = onEditPost
             )
         }
     }
@@ -59,14 +62,16 @@ fun MainLayout(
 fun PostsList(
     state: PostsListState,
     onSelectPost: (Post) -> Unit,
-    onDeletePost: (Post) -> Unit
+    onDeletePost: (Post) -> Unit,
+    onEditPost: (Post) -> Unit
 ) {
     LazyColumn {
         items(state.posts) {
             PostCard(
                 post = it,
                 onSelectPost = onSelectPost,
-                onDeletePost = onDeletePost
+                onDeletePost = onDeletePost,
+                onEditPost = onEditPost
             )
         }
     }
@@ -76,7 +81,8 @@ fun PostsList(
 fun PostCard(
     post: Post, modifier: Modifier = Modifier,
     onSelectPost: (Post) -> Unit,
-    onDeletePost: (Post) -> Unit
+    onDeletePost: (Post) -> Unit,
+    onEditPost: (Post) -> Unit
 ) {
     Column {
         Card(
@@ -105,6 +111,7 @@ fun PostCard(
                         Button(
                             modifier = modifier.padding(end = 5.dp),
                             onClick = {
+                                onEditPost(post)
                             }
                         ) {
                             Text(text = "Edit")
@@ -136,6 +143,7 @@ data class PostsListState(
 )
 
 data class Post(
+    val id: UUID = UUID.randomUUID(),
     val title: String = "",
     val description: String = ""
 )
@@ -154,7 +162,8 @@ fun PostPreview() {
                 )
             ),
             onAddPost = {},
-            onSelectPost = {}
+            onSelectPost = {},
+            onDeletePost = {}
         ) {
 
         }
