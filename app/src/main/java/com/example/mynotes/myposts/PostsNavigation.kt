@@ -21,7 +21,10 @@ fun PostsFlow() {
             }
         }
         composable(route = "add") {
-            PostForm {
+            PostForm { post ->
+                state = state.copy(posts = state.posts.toMutableList().also {
+                    it.add(0, element = post)
+                })
                 navigationController.popBackStack()
             }
         }

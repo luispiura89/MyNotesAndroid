@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PostForm(modifier: Modifier = Modifier, onPostAdded: () -> Unit) {
+fun PostForm(modifier: Modifier = Modifier, onPostAdded: (Post) -> Unit) {
     var titleState by remember {
         mutableStateOf("")
     }
@@ -63,7 +63,9 @@ fun PostForm(modifier: Modifier = Modifier, onPostAdded: () -> Unit) {
                 }
             )
             Spacer(modifier = modifier.height(20.dp))
-            Button(onClick = onPostAdded) {
+            Button(onClick = {
+                onPostAdded(Post(title = titleState, description = descriptionState))
+            }) {
                 Text(text = "Save Post")
             }
         }
