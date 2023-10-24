@@ -1,6 +1,7 @@
 package com.example.mynotes.myposts
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,7 +27,8 @@ import com.example.mynotes.ui.theme.MyNotesTheme
 fun MainLayout(
     modifier: Modifier = Modifier,
     state: PostsListState,
-    onAddPost: () -> Unit
+    onAddPost: () -> Unit,
+    onSelectPost: (Post) -> Unit
 ) {
     Column(
         modifier = modifier
@@ -42,27 +44,31 @@ fun MainLayout(
             EmptyPostsPlaceholder()
         } else {
             PostsList(
-                state = state
+                state = state,
+                onSelectPost = onSelectPost
             )
         }
     }
 }
 
 @Composable
-fun PostsList(state: PostsListState) {
+fun PostsList(state: PostsListState, onSelectPost: (Post) -> Unit) {
     LazyColumn {
         items(state.posts) {
-            PostCard(post = it)
+            PostCard(post = it, onSelectPost = onSelectPost)
         }
     }
 }
 
 @Composable
-fun PostCard(post: Post, modifier: Modifier = Modifier) {
+fun PostCard(post: Post, modifier: Modifier = Modifier, onSelectPost: (Post) -> Unit) {
     Column {
         Card(
             modifier = modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .clickable {
+                           onSelectPost(post)
+                },
             elevation = CardDefaults.cardElevation(5.dp)
         ) {
             Column {
@@ -104,7 +110,8 @@ fun PostPreview() {
                         description = "This is my first post description. I don't have anything to say."
                     )
                 )
-            )
+            ),
+            onAddPost = {}
         ) {
 
         }

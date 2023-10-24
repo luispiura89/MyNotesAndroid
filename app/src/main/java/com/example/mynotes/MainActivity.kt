@@ -33,6 +33,8 @@ fun GreetingPreview() {
                     Post("second post", description = "This is my second post"),
                 )
             )
-        )
+        ) {
+
+        }
     }
 }

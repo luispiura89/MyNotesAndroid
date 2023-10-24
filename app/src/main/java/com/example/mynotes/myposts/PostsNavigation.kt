@@ -4,9 +4,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.*
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 
 @Composable
 fun PostsFlow() {
@@ -16,8 +18,10 @@ fun PostsFlow() {
     }
     NavHost(navController = navigationController, startDestination = "main") {
         composable(route = "main") {
-            MainLayout(state = state) {
+            MainLayout(state = state, onAddPost = {
                 navigationController.navigate("add")
+            }) {
+                navigationController.navigate("detail/${it.title}/${it.description}")
             }
         }
         composable(route = "add") {
@@ -27,6 +31,22 @@ fun PostsFlow() {
                 })
                 navigationController.popBackStack()
             }
+        }
+        composable(
+            route = "detail/{title}/{description}",
+            arguments = listOf(
+                navArgument("title") {
+                    type = NavType.StringType
+                },
+                navArgument("description") {
+                    type = NavType.StringType
+                }
+            )
+        ) {
+            PostDetail(
+                title = it.arguments?.getString("title") ?: "",
+                description = it.arguments?.getString("description") ?: ""
+            )
         }
     }
 }
