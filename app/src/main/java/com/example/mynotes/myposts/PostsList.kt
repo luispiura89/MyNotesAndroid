@@ -38,9 +38,13 @@ fun MainLayout(
             Text(text = "Add")
         }
         Spacer(modifier = modifier.height(15.dp))
-        PostsList(
-            state = state
-        )
+        if (state.posts.isEmpty()) {
+            EmptyPostsPlaceholder()
+        } else {
+            PostsList(
+                state = state
+            )
+        }
     }
 }
 
