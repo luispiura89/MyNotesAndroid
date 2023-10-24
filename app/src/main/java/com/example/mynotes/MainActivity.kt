@@ -33,7 +33,7 @@ fun GreetingPreview() {
                     Post(title = "second post", description = "This is my second post"),
                 )
             )
-        ) { action, post ->
+        ) { _, _ ->
 
         }
     }
