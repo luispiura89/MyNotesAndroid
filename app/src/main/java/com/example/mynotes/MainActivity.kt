@@ -32,7 +32,8 @@ fun GreetingPreview() {
                     Post("first post", description = "This is my first post"),
                     Post("second post", description = "This is my second post"),
                 )
-            )
+            ),
+            onSelectPost = {}
         ) {
 
         }

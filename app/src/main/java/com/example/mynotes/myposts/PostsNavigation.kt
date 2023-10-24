@@ -20,8 +20,14 @@ fun PostsFlow() {
         composable(route = "main") {
             MainLayout(state = state, onAddPost = {
                 navigationController.navigate("add")
-            }) {
+            }, onSelectPost = {
                 navigationController.navigate("detail/${it.title}/${it.description}")
+            }) { post ->
+                state = state.copy(
+                    posts = state.posts.toMutableList().also {
+                        it.remove(post)
+                    }
+                )
             }
         }
         composable(route = "add") {

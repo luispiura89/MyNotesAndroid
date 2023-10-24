@@ -2,7 +2,9 @@ package com.example.mynotes.myposts
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,7 +30,8 @@ fun MainLayout(
     modifier: Modifier = Modifier,
     state: PostsListState,
     onAddPost: () -> Unit,
-    onSelectPost: (Post) -> Unit
+    onSelectPost: (Post) -> Unit,
+    onDeletePost: (Post) -> Unit
 ) {
     Column(
         modifier = modifier
@@ -45,37 +48,63 @@ fun MainLayout(
         } else {
             PostsList(
                 state = state,
-                onSelectPost = onSelectPost
+                onSelectPost = onSelectPost,
+                onDeletePost = onDeletePost
             )
         }
     }
 }
 
 @Composable
-fun PostsList(state: PostsListState, onSelectPost: (Post) -> Unit) {
+fun PostsList(
+    state: PostsListState,
+    onSelectPost: (Post) -> Unit,
+    onDeletePost: (Post) -> Unit
+) {
     LazyColumn {
         items(state.posts) {
-            PostCard(post = it, onSelectPost = onSelectPost)
+            PostCard(
+                post = it,
+                onSelectPost = onSelectPost,
+                onDeletePost = onDeletePost
+            )
         }
     }
 }
 
 @Composable
-fun PostCard(post: Post, modifier: Modifier = Modifier, onSelectPost: (Post) -> Unit) {
+fun PostCard(
+    post: Post, modifier: Modifier = Modifier,
+    onSelectPost: (Post) -> Unit,
+    onDeletePost: (Post) -> Unit
+) {
     Column {
         Card(
             modifier = modifier
                 .fillMaxWidth()
                 .clickable {
-                           onSelectPost(post)
+                    onSelectPost(post)
                 },
             elevation = CardDefaults.cardElevation(5.dp)
         ) {
             Column {
-                Text(
-                    text = post.title,
-                    modifier = modifier.padding(20.dp)
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .padding(end = 5.dp)
+                ) {
+                    Text(
+                        text = post.title,
+                        modifier = modifier.padding(20.dp)
+                    )
+                    Button(onClick = {
+                        onDeletePost(post)
+                    }) {
+                        Text(text = "Delete")
+                    }
+                }
                 Divider(
                     modifier = modifier.background(Color.Gray)
                 )
@@ -111,7 +140,8 @@ fun PostPreview() {
                     )
                 )
             ),
-            onAddPost = {}
+            onAddPost = {},
+            onSelectPost = {}
         ) {
 
         }
