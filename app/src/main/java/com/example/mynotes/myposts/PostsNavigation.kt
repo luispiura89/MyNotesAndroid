@@ -19,7 +19,13 @@ fun PostsFlow() {
     }
     NavHost(navController = navigationController, startDestination = "main") {
         composable(route = "main") {
-            MainLayout(state = state,
+            MainLayout(
+                state = state,
+                onFetchPosts = { posts ->
+                    state = state.copy(posts = state.posts.toMutableList().also {
+                        it.addAll(0, posts)
+                    })
+                }
             ) { action, post ->
                 when (action) {
                     PostListAction.ADD -> {

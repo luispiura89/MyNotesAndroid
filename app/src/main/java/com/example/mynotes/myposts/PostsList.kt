@@ -42,7 +42,8 @@ fun PostPreview() {
                     )
                 )
             ),
-        ) { action, post ->
+            onFetchPosts = {}
+        ) { _, _ ->
 
         }
     }

@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.mynotes.myposts.MainLayout
 import com.example.mynotes.myposts.Post
 import com.example.mynotes.myposts.PostsFlow
 import com.example.mynotes.myposts.PostsList
@@ -26,15 +27,16 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun GreetingPreview() {
     MyNotesTheme {
-        PostsList(
-            PostsListState(
+        MainLayout(
+            state = PostsListState(
                 posts = listOf(
                     Post(title = "first post", description = "This is my first post"),
                     Post(title = "second post", description = "This is my second post"),
                 )
-            )
-        ) { _, _ ->
+            ),
+            onFetchPosts = {},
+            onAction = { _, _ ->
 
-        }
+            })
     }
 }
