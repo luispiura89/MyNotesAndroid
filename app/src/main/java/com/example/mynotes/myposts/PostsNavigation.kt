@@ -29,7 +29,7 @@ fun PostsFlow() {
             ) { action ->
                 when (action) {
                     PostListAction.Add -> {
-                        navigationController.navigate("add")
+                        navigationController.navigate("form")
                     }
                     is PostListAction.Remove -> {
                         state = state.copy(
@@ -43,14 +43,14 @@ fun PostsFlow() {
                     }
                     is PostListAction.Edit -> {
                         navigationController.navigate(
-                            "add?id=${action.post.id}&title=${action.post.title}&description=${action.post.description}"
+                            "form?id=${action.post.id}&title=${action.post.title}&description=${action.post.description}"
                         )
                     }
                 }
             }
         }
         composable(
-            route = "add?id={id}&title={title}&description={description}",
+            route = "form?id={id}&title={title}&description={description}",
             arguments = listOf(
                 navArgument("id") {
                     type = NavType.StringType
