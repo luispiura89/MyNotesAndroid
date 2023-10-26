@@ -66,22 +66,21 @@ fun PostsFlow() {
                 }
             )
         ) {
-            val position = it.arguments?.getString("id")?.let {
-                state.posts.indexOfFirst { post ->
-                    post.id == UUID.fromString(it)
-                }
-            } ?: -1
             PostForm(
                 title = it.arguments?.getString("title"),
                 description = it.arguments?.getString("description"),
                 action = if (it.arguments?.getString("title") == null) PostFormAction.ADD else PostFormAction.EDIT,
-                position = position
             ) { result ->
                 state = state.copy(posts = state.posts.toMutableList().also { list ->
                     if (result.action == PostFormAction.ADD) {
                         list.add(0, element = result.post)
                     } else {
-                        list[result.position] = result.post
+                        val position = it.arguments?.getString("id")?.let {
+                            state.posts.indexOfFirst { post ->
+                                post.id == UUID.fromString(it)
+                            }
+                        } ?: -1
+                        list[position] = result.post
                     }
                 })
                 navigationController.popBackStack()

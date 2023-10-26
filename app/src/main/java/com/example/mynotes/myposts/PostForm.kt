@@ -29,7 +29,6 @@ enum class PostFormAction {
 
 data class PostFormResult(
     val action: PostFormAction,
-    val position: Int,
     val post: Post
 )
 
@@ -40,7 +39,6 @@ fun PostForm(
     description: String?,
     modifier: Modifier = Modifier,
     action: PostFormAction,
-    position: Int,
     onPostAction: (PostFormResult) -> Unit
 ) {
     var titleState by remember {
@@ -85,7 +83,6 @@ fun PostForm(
                 onPostAction(
                     PostFormResult(
                         action,
-                        position,
                         post = Post(title = titleState, description = descriptionState)
                     )
                 )
