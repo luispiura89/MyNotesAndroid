@@ -35,7 +35,7 @@ fun GreetingPreview() {
                 )
             ),
             onFetchPosts = {},
-            onAction = { _, _ ->
+            onAction = { _ ->
 
             })
     }

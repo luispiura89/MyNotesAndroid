@@ -26,24 +26,24 @@ fun PostsFlow() {
                         it.addAll(0, posts)
                     })
                 }
-            ) { action, post ->
+            ) { action ->
                 when (action) {
-                    PostListAction.ADD -> {
+                    PostListAction.Add -> {
                         navigationController.navigate("add")
                     }
-                    PostListAction.REMOVE -> {
+                    is PostListAction.Remove -> {
                         state = state.copy(
                             posts = state.posts.toMutableList().also {
-                                it.remove(post)
+                                it.remove(action.post)
                             }
                         )
                     }
-                    PostListAction.SELECT -> {
-                        navigationController.navigate("detail/${post?.title}/${post?.description}")
+                    is PostListAction.Select -> {
+                        navigationController.navigate("detail/${action.post.title}/${action.post.description}")
                     }
-                    PostListAction.EDIT -> {
+                    is PostListAction.Edit -> {
                         navigationController.navigate(
-                            "add?id=${post?.id}&title=${post?.title}&description=${post?.description}"
+                            "add?id=${action.post.id}&title=${action.post.title}&description=${action.post.description}"
                         )
                     }
                 }

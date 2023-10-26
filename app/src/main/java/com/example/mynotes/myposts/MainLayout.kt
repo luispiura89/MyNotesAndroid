@@ -27,7 +27,7 @@ fun MainLayout(
     modifier: Modifier = Modifier,
     state: PostsListState,
     onFetchPosts: (List<Post>) -> Unit,
-    onAction: (PostListAction, Post?) -> Unit
+    onAction: (PostListAction) -> Unit
 ) {
     val scope = rememberCoroutineScope()
     val obj = MyAsyncClass()
@@ -53,7 +53,7 @@ fun MainLayout(
                 Text(text = "Fetch posts")
             }
             Button(onClick = {
-                onAction(PostListAction.ADD, null)
+                onAction(PostListAction.Add)
             }) {
                 Text(text = "Add")
             }
@@ -82,7 +82,7 @@ fun LayoutPreview() {
                 )
             ),
             onFetchPosts = {},
-            onAction = { _, _ ->
+            onAction = { _ ->
 
             }
         )

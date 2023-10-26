@@ -9,7 +9,7 @@ import com.example.mynotes.ui.theme.MyNotesTheme
 @Composable
 fun PostsList(
     state: PostsListState,
-    onAction: (PostListAction, Post?) -> Unit
+    onAction: (PostListAction) -> Unit
 ) {
     LazyColumn {
         items(state.posts) {
@@ -21,8 +21,11 @@ fun PostsList(
     }
 }
 
-enum class PostListAction {
-    ADD, SELECT, EDIT, REMOVE
+sealed class PostListAction {
+    object Add : PostListAction()
+    data class Select(val post: Post): PostListAction()
+    data class Edit(val post: Post): PostListAction()
+    data class Remove(val post: Post): PostListAction()
 }
 
 data class PostsListState(
@@ -43,7 +46,7 @@ fun PostPreview() {
                 )
             ),
             onFetchPosts = {}
-        ) { _, _ ->
+        ) { _ ->
 
         }
     }

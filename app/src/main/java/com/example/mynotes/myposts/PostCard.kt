@@ -23,14 +23,14 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun PostCard(
     post: Post, modifier: Modifier = Modifier,
-    onAction: (PostListAction, Post?) -> Unit
+    onAction: (PostListAction) -> Unit
 ) {
     Column {
         Card(
             modifier = modifier
                 .fillMaxWidth()
                 .clickable {
-                    onAction(PostListAction.SELECT, post)
+                    onAction(PostListAction.Select(post))
                 },
             elevation = CardDefaults.cardElevation(5.dp)
         ) {
@@ -52,14 +52,14 @@ fun PostCard(
                         Button(
                             modifier = modifier.padding(end = 5.dp),
                             onClick = {
-                                onAction(PostListAction.EDIT, post)
+                                onAction(PostListAction.Edit(post))
                             }
                         ) {
                             Text(text = "Edit")
                         }
                         Button(
                             onClick = {
-                                onAction(PostListAction.REMOVE, post)
+                                onAction(PostListAction.Remove(post))
                             }
                         ) {
                             Text(text = "Delete")
