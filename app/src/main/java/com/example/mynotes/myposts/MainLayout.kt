@@ -1,6 +1,5 @@
 package com.example.mynotes.myposts
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,9 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.*
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,7 +20,6 @@ import com.example.mynotes.myposts.coroutines.MyAsyncClass
 import com.example.mynotes.ui.theme.MyNotesTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @Composable
 fun MainLayout(
@@ -35,9 +30,6 @@ fun MainLayout(
 ) {
     val scope = rememberCoroutineScope()
     val obj = MyAsyncClass()
-    var text by remember {
-        mutableStateOf("Add")
-    }
     Column(
         modifier = modifier
             .fillMaxSize()
