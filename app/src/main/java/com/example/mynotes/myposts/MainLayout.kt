@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.example.mynotes.myposts.coroutines.MyAsyncClass
 import com.example.mynotes.ui.theme.MyNotesTheme
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 @Composable
@@ -42,7 +43,11 @@ fun MainLayout(
         ) {
             Button(onClick = {
                 scope.launch(Dispatchers.IO) {
-                    onFetchPosts(obj.fetchPosts())
+                    val firstPage = async { obj.fetchPostsFirstPage() }
+                    val secondPage = async { obj.fetchPostsSecondPage() }
+                    onFetchPosts(firstPage.await().toMutableList().also {
+                        it.addAll(secondPage.await())
+                    })
                 }
             }) {
                 Text(text = "Fetch posts")

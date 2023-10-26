@@ -17,8 +17,8 @@ class MyAsyncClass {
         return "This is the second call"
     }
 
-    suspend fun fetchPosts(): List<Post> {
-        delay(1000L)
+    suspend fun fetchPostsFirstPage(): List<Post> {
+        delay(2000L)
         return listOf(
             Post(
                 title = "iOS vs Android",
@@ -27,6 +27,18 @@ class MyAsyncClass {
             Post(
                 title = "F1 2023 World Championship",
                 description = "RedBull Racing has been giving headaches to every other team they faced."
+            )
+        )
+    }
+
+    suspend fun fetchPostsSecondPage(): List<Post> {
+        delay(2000L)
+        return listOf(
+            Post(
+                title = "SwiftUI vs Jetpack Compose",
+                description = "They are very similar so far. I would say that I " +
+                        "feel easier the separation of concerns when it comes to SwiftUI. " +
+                        "Nevertheless, Jetpack Compose navigation seems easier"
             )
         )
     }
