@@ -37,17 +37,11 @@ fun PostCard(
             Column {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween,
+                    horizontalArrangement = Arrangement.End,
                     modifier = modifier
                         .fillMaxWidth()
-                        .padding(end = 5.dp)
+                        .padding(5.dp)
                 ) {
-                    Text(
-                        text = post.title,
-                        modifier = modifier
-                            .padding(20.dp)
-                            .weight(1f)
-                    )
                     Row {
                         Button(
                             modifier = modifier.padding(end = 5.dp),

@@ -39,11 +39,11 @@ fun PostsFlow() {
                         )
                     }
                     is PostListAction.Select -> {
-                        navigationController.navigate("detail/${action.post.title}/${action.post.description}")
+                        navigationController.navigate("detail/${action.post.description}")
                     }
                     is PostListAction.Edit -> {
                         navigationController.navigate(
-                            "form?id=${action.post.id}&title=${action.post.title}&description=${action.post.description}"
+                            "form?id=${action.post.id}&description=${action.post.description}"
                         )
                     }
                 }
@@ -56,10 +56,6 @@ fun PostsFlow() {
                     type = NavType.StringType
                     nullable = true
                 },
-                navArgument("title") {
-                    type = NavType.StringType
-                    nullable = true
-                },
                 navArgument("description") {
                     type = NavType.StringType
                     nullable = true
@@ -67,9 +63,8 @@ fun PostsFlow() {
             )
         ) {
             PostForm(
-                title = it.arguments?.getString("title"),
                 description = it.arguments?.getString("description"),
-                action = if (it.arguments?.getString("title") == null) PostFormAction.ADD else PostFormAction.EDIT,
+                action = if (it.arguments?.getString("description") == null) PostFormAction.ADD else PostFormAction.EDIT,
             ) { result ->
                 state = state.copy(posts = state.posts.toMutableList().also { list ->
                     if (result.action == PostFormAction.ADD) {
@@ -87,18 +82,14 @@ fun PostsFlow() {
             }
         }
         composable(
-            route = "detail/{title}/{description}",
+            route = "detail/{description}",
             arguments = listOf(
-                navArgument("title") {
-                    type = NavType.StringType
-                },
                 navArgument("description") {
                     type = NavType.StringType
                 }
             )
         ) {
             PostDetail(
-                title = it.arguments?.getString("title") ?: "",
                 description = it.arguments?.getString("description") ?: ""
             )
         }

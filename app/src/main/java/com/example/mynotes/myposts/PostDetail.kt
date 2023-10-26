@@ -19,15 +19,11 @@ import androidx.compose.ui.unit.dp
 import com.example.mynotes.ui.theme.MyNotesTheme
 
 @Composable
-fun PostDetail(modifier: Modifier = Modifier, title: String, description: String) {
+fun PostDetail(modifier: Modifier = Modifier, description: String) {
     Column(modifier = modifier
         .fillMaxSize()
         .padding(20.dp)
     ) {
-        Text(
-            text = title,
-            modifier = modifier.fillMaxWidth()
-        )
         Spacer(modifier = modifier.height(20.dp))
         Divider(modifier = modifier.background(Color.Gray))
         Text(
@@ -45,7 +41,6 @@ fun PostDetail(modifier: Modifier = Modifier, title: String, description: String
 fun PostDetailsPreview() {
     MyNotesTheme {
         PostDetail(
-            title = "This is a post",
             description = "This is the body of my post.\n\nThis is the second line."
         )
     }

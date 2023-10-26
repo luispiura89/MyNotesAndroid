@@ -4,6 +4,6 @@ import java.util.UUID
 
 data class Post(
     val id: UUID = UUID.randomUUID(),
-    val title: String = "",
-    val description: String = ""
+    val description: String = "",
+    val isComplete: Boolean = false
 )

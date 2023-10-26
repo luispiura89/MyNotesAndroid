@@ -21,11 +21,9 @@ class MyAsyncClass {
         delay(2000L)
         return listOf(
             Post(
-                title = "iOS vs Android",
                 description = "Both platforms are fun to work on and have their pros and cons."
             ),
             Post(
-                title = "F1 2023 World Championship",
                 description = "RedBull Racing has been giving headaches to every other team they faced."
             )
         )
@@ -35,7 +33,6 @@ class MyAsyncClass {
         delay(2000L)
         return listOf(
             Post(
-                title = "SwiftUI vs Jetpack Compose",
                 description = "They are very similar so far. I would say that I " +
                         "feel easier the separation of concerns when it comes to SwiftUI. " +
                         "Nevertheless, Jetpack Compose navigation seems easier"

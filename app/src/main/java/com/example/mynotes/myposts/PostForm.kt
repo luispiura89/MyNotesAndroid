@@ -35,15 +35,11 @@ data class PostFormResult(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PostForm(
-    title: String?,
     description: String?,
     modifier: Modifier = Modifier,
     action: PostFormAction,
     onPostAction: (PostFormResult) -> Unit
 ) {
-    var titleState by remember {
-        mutableStateOf(title ?: "")
-    }
     var descriptionState by remember {
         mutableStateOf(description ?: "")
     }
@@ -62,16 +58,6 @@ fun PostForm(
         ) {
             TextField(
                 modifier = modifier.fillMaxWidth(),
-                value = titleState,
-                onValueChange = { titleState = it },
-                label = {
-                    Text("Title")
-                },
-                singleLine = true
-            )
-            Spacer(modifier = modifier.height(20.dp))
-            TextField(
-                modifier = modifier.fillMaxWidth(),
                 value = descriptionState,
                 onValueChange = { descriptionState = it },
                 label = {
@@ -83,7 +69,7 @@ fun PostForm(
                 onPostAction(
                     PostFormResult(
                         action,
-                        post = Post(title = titleState, description = descriptionState)
+                        post = Post(description = descriptionState)
                     )
                 )
             }) {

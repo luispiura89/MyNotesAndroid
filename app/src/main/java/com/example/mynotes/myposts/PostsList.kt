@@ -40,7 +40,6 @@ fun PostPreview() {
             state = PostsListState(
                 posts = listOf(
                     Post(
-                        title = "This is my first post description. I don't have anything to say.",
                         description = "This is my first post description. I don't have anything to say."
                     )
                 )
