@@ -21,6 +21,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import java.util.UUID
 
 enum class PostFormAction {
     EDIT,
@@ -35,6 +36,7 @@ data class PostFormResult(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PostForm(
+    id: String?,
     description: String?,
     modifier: Modifier = Modifier,
     action: PostFormAction,
@@ -69,7 +71,10 @@ fun PostForm(
                 onPostAction(
                     PostFormResult(
                         action,
-                        post = Post(description = descriptionState)
+                        post = Post(
+                            id = id?.let { UUID.fromString(it) } ?: UUID.randomUUID(),
+                            description = descriptionState
+                        )
                     )
                 )
             }) {
