@@ -23,7 +23,7 @@ fun PostsFlow() {
             ) { action ->
                 when (action) {
                     PostListAction.Add -> {
-                        navigationController.navigate("form")
+                        navigationController.navigate("add")
                     }
                     is PostListAction.Remove -> {
                         viewModel.remove(action.post)
@@ -33,14 +33,26 @@ fun PostsFlow() {
                     }
                     is PostListAction.Edit -> {
                         navigationController.navigate(
-                            "form?id=${action.post.id}&description=${action.post.description}"
+                            "edit/${action.post.id}/${action.post.description}"
                         )
                     }
                 }
             }
         }
+        composable(route = "add") {
+            PostForm(
+                id = null,
+                description = null,
+                action = PostFormAction.ADD,
+            ) { result ->
+                if (result.action == PostFormAction.ADD) {
+                        viewModel.add(result.post)
+                }
+                navigationController.popBackStack()
+            }
+        }
         composable(
-            route = "form?id={id}&title={title}&description={description}",
+            route = "edit/{id}/{description}",
             arguments = listOf(
                 navArgument("id") {
                     type = NavType.StringType
@@ -55,15 +67,10 @@ fun PostsFlow() {
             PostForm(
                 id = it.arguments?.getString("id"),
                 description = it.arguments?.getString("description"),
-                action = if (it.arguments?.getString("description") == null) PostFormAction.ADD else PostFormAction.EDIT,
+                action = PostFormAction.EDIT,
             ) { result ->
-                when (result.action) {
-                    PostFormAction.ADD -> {
-                        viewModel.add(result.post)
-                    }
-                    else -> {
-                        viewModel.update(result.post)
-                    }
+                if (result.action == PostFormAction.EDIT) {
+                    viewModel.update(result.post)
                 }
                 navigationController.popBackStack()
             }
