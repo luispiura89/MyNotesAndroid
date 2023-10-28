@@ -11,7 +11,7 @@ fun NavGraphBuilder.addPost(
     navigationController: NavHostController,
     viewModel: PostsViewModel
 ) {
-    composable(route = "add") {
+    composable(route = PostScreen.Add.routeDefinition) {
         PostForm(
             id = null,
             description = null,

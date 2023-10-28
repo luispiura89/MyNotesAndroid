@@ -14,7 +14,7 @@ fun NavGraphBuilder.editPost(
     viewModel: PostsViewModel
 ) {
     composable(
-        route = "edit/{id}/{description}",
+        route = PostScreen.Edit().routeDefinition,
         arguments = listOf(
             navArgument("id") {
                 type = NavType.StringType

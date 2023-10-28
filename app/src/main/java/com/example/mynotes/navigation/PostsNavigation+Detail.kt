@@ -8,7 +8,7 @@ import com.example.mynotes.myposts.PostDetail
 
 fun NavGraphBuilder.detail() {
     composable(
-        route = "detail/{description}",
+        route = PostScreen.Detail().routeDefinition,
         arguments = listOf(
             navArgument("description") {
                 type = NavType.StringType
