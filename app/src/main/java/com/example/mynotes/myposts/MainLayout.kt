@@ -11,6 +11,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,11 +29,10 @@ import kotlinx.coroutines.launch
 fun MainLayout(
     modifier: Modifier = Modifier,
     state: PostsListState,
-    onFetchPosts: (List<Post>) -> Unit,
+    onFetchPosts: () -> Unit,
     onAction: (PostListAction) -> Unit
 ) {
     val scope = rememberCoroutineScope()
-    val obj = MyAsyncClass()
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -42,13 +44,7 @@ fun MainLayout(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Button(onClick = {
-                scope.launch(Dispatchers.IO) {
-                    val firstPage = async { obj.fetchPostsFirstPage() }
-                    val secondPage = async { obj.fetchPostsSecondPage() }
-                    onFetchPosts(firstPage.await().toMutableList().also {
-                        it.addAll(secondPage.await())
-                    })
-                }
+                onFetchPosts()
             }) {
                 Text(text = "Fetch posts")
             }

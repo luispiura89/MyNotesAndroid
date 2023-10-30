@@ -15,8 +15,8 @@ fun NavGraphBuilder.main(
     composable(route = PostScreen.Main.routeDefinition) {
         MainLayout(
             state = viewModel.uiState.collectAsState().value,
-            onFetchPosts = { posts ->
-                viewModel.add(posts)
+            onFetchPosts = {
+                viewModel.fetchPosts()
             }
         ) { action ->
             when (action) {

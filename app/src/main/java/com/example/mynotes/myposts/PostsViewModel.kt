@@ -1,12 +1,18 @@
 package com.example.mynotes.myposts
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.mynotes.myposts.coroutines.MyAsyncClass
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import java.util.UUID
 
 class PostsViewModel: ViewModel() {
 
+    private val myObject = MyAsyncClass()
     private var _uiState = MutableStateFlow(PostsListState())
     val uiState = _uiState.asStateFlow()
 
@@ -45,5 +51,18 @@ class PostsViewModel: ViewModel() {
                 }
             }
         )
+    }
+
+    fun fetchPosts() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val posts1 = async { myObject.fetchPostsFirstPage() }
+            val posts2 = async { myObject.fetchPostsSecondPage() }
+            _uiState.value = _uiState.value.copy(
+                posts = _uiState.value.posts.toMutableList().also { posts ->
+                    posts.addAll(0, posts1.await())
+                    posts.addAll(0, posts2.await())
+                }
+            )
+        }
     }
 }
