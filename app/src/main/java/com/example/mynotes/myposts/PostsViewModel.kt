@@ -7,8 +7,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.UUID
 
 class PostsViewModel: ViewModel() {
 
@@ -17,40 +17,48 @@ class PostsViewModel: ViewModel() {
     val uiState = _uiState.asStateFlow()
 
     fun add(post: Post) {
-        _uiState.value = _uiState.value.copy(
-            posts = _uiState.value.posts.toMutableList().also {
-                it.add(0, post)
-            }
-        )
+        _uiState.update { state ->
+            state.copy(
+                posts = _uiState.value.posts.toMutableList().also {
+                    it.add(0, post)
+                }
+            )
+        }
     }
 
     private fun add(posts: List<Post>) {
-        _uiState.value = _uiState.value.copy(
-            posts = _uiState.value.posts.toMutableList().also {
-                it.addAll(0, posts)
-            }
-        )
+        _uiState.update { state ->
+            state.copy(
+                posts = _uiState.value.posts.toMutableList().also {
+                    it.addAll(0, posts)
+                }
+            )
+        }
     }
 
     fun remove(post: Post) {
-        _uiState.value = _uiState.value.copy(
-            posts = _uiState.value.posts.toMutableList().also {
-                it.remove(post)
-            }
-        )
+        _uiState.update { state ->
+            state.copy(
+                posts = _uiState.value.posts.toMutableList().also {
+                    it.remove(post)
+                }
+            )
+        }
     }
 
     fun update(post: Post) {
-        _uiState.value = _uiState.value.copy(
-            posts = _uiState.value.posts.toMutableList().also {
-                val position = it.indexOfFirst { postItem ->
-                    post.id == postItem.id
+        _uiState.update { state ->
+            state.copy(
+                posts = _uiState.value.posts.toMutableList().also {
+                    val position = it.indexOfFirst { postItem ->
+                        post.id == postItem.id
+                    }
+                    if (position >= 0) {
+                        it[position] = post
+                    }
                 }
-                if (position >= 0) {
-                    it[position] = post
-                }
-            }
-        )
+            )
+        }
     }
 
     fun fetchPosts() {
