@@ -5,7 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.example.mynotes.myposts.MainLayout
-import com.example.mynotes.myposts.PostListAction
+import com.example.mynotes.myposts.composables.PostListAction
 import com.example.mynotes.myposts.PostsViewModel
 
 fun NavGraphBuilder.main(

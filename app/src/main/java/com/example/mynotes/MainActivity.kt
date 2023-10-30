@@ -8,7 +8,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.mynotes.myposts.MainLayout
 import com.example.mynotes.myposts.Post
 import com.example.mynotes.navigation.PostsFlow
-import com.example.mynotes.myposts.PostsListState
+import com.example.mynotes.myposts.composables.PostsListState
 import com.example.mynotes.ui.theme.MyNotesTheme
 
 class MainActivity : ComponentActivity() {

@@ -4,7 +4,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.mynotes.myposts.PostDetail
+import com.example.mynotes.myposts.composables.PostDetail
 
 fun NavGraphBuilder.detail() {
     composable(

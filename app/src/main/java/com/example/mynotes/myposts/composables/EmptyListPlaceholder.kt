@@ -1,4 +1,4 @@
-package com.example.mynotes.myposts
+package com.example.mynotes.myposts.composables
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize

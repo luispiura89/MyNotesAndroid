@@ -1,9 +1,11 @@
-package com.example.mynotes.myposts
+package com.example.mynotes.myposts.composables
 
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.mynotes.myposts.MainLayout
+import com.example.mynotes.myposts.Post
 import com.example.mynotes.ui.theme.MyNotesTheme
 
 @Composable

@@ -1,4 +1,4 @@
-package com.example.mynotes.myposts
+package com.example.mynotes.myposts.composables
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,6 +21,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.mynotes.myposts.Post
 import java.util.UUID
 
 enum class PostFormAction {

@@ -2,6 +2,7 @@ package com.example.mynotes.myposts
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.mynotes.myposts.composables.PostsListState
 import com.example.mynotes.myposts.coroutines.MyAsyncClass
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async

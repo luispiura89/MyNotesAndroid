@@ -3,8 +3,8 @@ package com.example.mynotes.navigation
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
-import com.example.mynotes.myposts.PostForm
-import com.example.mynotes.myposts.PostFormAction
+import com.example.mynotes.myposts.composables.PostForm
+import com.example.mynotes.myposts.composables.PostFormAction
 import com.example.mynotes.myposts.PostsViewModel
 
 fun NavGraphBuilder.addPost(

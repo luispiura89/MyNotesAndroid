@@ -5,8 +5,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.mynotes.myposts.PostForm
-import com.example.mynotes.myposts.PostFormAction
+import com.example.mynotes.myposts.composables.PostForm
+import com.example.mynotes.myposts.composables.PostFormAction
 import com.example.mynotes.myposts.PostsViewModel
 
 fun NavGraphBuilder.editPost(
