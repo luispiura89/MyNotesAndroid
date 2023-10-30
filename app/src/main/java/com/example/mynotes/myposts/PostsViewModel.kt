@@ -24,7 +24,7 @@ class PostsViewModel: ViewModel() {
         )
     }
 
-    fun add(posts: List<Post>) {
+    private fun add(posts: List<Post>) {
         _uiState.value = _uiState.value.copy(
             posts = _uiState.value.posts.toMutableList().also {
                 it.addAll(0, posts)
@@ -57,12 +57,8 @@ class PostsViewModel: ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             val posts1 = async { myObject.fetchPostsFirstPage() }
             val posts2 = async { myObject.fetchPostsSecondPage() }
-            _uiState.value = _uiState.value.copy(
-                posts = _uiState.value.posts.toMutableList().also { posts ->
-                    posts.addAll(0, posts1.await())
-                    posts.addAll(0, posts2.await())
-                }
-            )
+            add(posts1.await())
+            add(posts2.await())
         }
     }
 }
