@@ -12,18 +12,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.mynotes.myposts.Post
 
 @Composable
 fun PostCard(
-    post: Post, modifier: Modifier = Modifier,
+    post: Post,
+    modifier: Modifier = Modifier,
     onAction: (PostListAction) -> Unit
 ) {
     Column {
@@ -38,11 +41,20 @@ fun PostCard(
             Column {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.End,
+                    horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = modifier
                         .fillMaxWidth()
                         .padding(5.dp)
                 ) {
+                    Checkbox(
+                        checked = post.isComplete,
+                        onCheckedChange = {
+                            if (it)
+                                onAction(PostListAction.MarkAsComplete(post))
+                            else
+                                onAction(PostListAction.MarkAsIncomplete(post))
+                        }
+                    )
                     Row {
                         Button(
                             modifier = modifier.padding(end = 5.dp),
@@ -72,4 +84,14 @@ fun PostCard(
         }
         Spacer(modifier = modifier.height(15.dp))
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PostCardPreview() {
+    PostCard(
+        post = Post(
+        description = "This is my first post description. I don't have anything to say."
+        )
+    ) {}
 }

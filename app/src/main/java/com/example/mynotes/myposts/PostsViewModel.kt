@@ -47,6 +47,13 @@ class PostsViewModel: ViewModel() {
         }
     }
 
+    fun markPostAsComplete(post: Post) {
+        update(post.copy(isComplete = true))
+    }
+    fun markPostAsIncomplete(post: Post) {
+        update(post.copy(isComplete = false))
+    }
+
     fun update(post: Post) {
         _uiState.update { state ->
             state.copy(

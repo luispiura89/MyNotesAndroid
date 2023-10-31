@@ -39,6 +39,12 @@ fun NavGraphBuilder.main(
                             .route
                     )
                 }
+                is PostListAction.MarkAsComplete -> {
+                    viewModel.markPostAsComplete(action.post)
+                }
+                is PostListAction.MarkAsIncomplete -> {
+                    viewModel.markPostAsIncomplete(action.post)
+                }
             }
         }
     }

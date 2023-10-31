@@ -28,6 +28,8 @@ sealed class PostListAction {
     data class Select(val post: Post): PostListAction()
     data class Edit(val post: Post): PostListAction()
     data class Remove(val post: Post): PostListAction()
+    data class MarkAsComplete(val post: Post): PostListAction()
+    data class MarkAsIncomplete(val post: Post): PostListAction()
 }
 
 data class PostsListState(
