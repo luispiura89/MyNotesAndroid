@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.mynotes.myposts.Post
+import java.util.Date
 import java.util.UUID
 
 enum class PostFormAction {
@@ -39,6 +40,8 @@ data class PostFormResult(
 fun PostForm(
     id: String?,
     description: String?,
+    createdOn: Long?,
+    isComplete: Boolean? = false,
     modifier: Modifier = Modifier,
     action: PostFormAction,
     onPostAction: (PostFormResult) -> Unit
@@ -74,7 +77,9 @@ fun PostForm(
                         action,
                         post = Post(
                             id = id?.let { UUID.fromString(it) } ?: UUID.randomUUID(),
-                            description = descriptionState
+                            description = descriptionState,
+                            isComplete = isComplete ?: false,
+                            createdOn = createdOn?.let { Date(it) } ?: Date()
                         )
                     )
                 )

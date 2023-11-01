@@ -15,6 +15,7 @@ fun NavGraphBuilder.addPost(
         PostForm(
             id = null,
             description = null,
+            createdOn = null,
             action = PostFormAction.ADD,
         ) { result ->
             if (result.action == PostFormAction.ADD) {

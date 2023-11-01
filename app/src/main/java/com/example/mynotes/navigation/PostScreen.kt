@@ -1,5 +1,7 @@
 package com.example.mynotes.navigation
 
+import java.util.Date
+
 sealed class PostScreen {
     object Add: PostScreen()
 
@@ -7,7 +9,9 @@ sealed class PostScreen {
 
     data class Edit(
         val id: String = "",
-        val description: String = ""
+        val description: String = "",
+        val createdOn: Date = Date(),
+        val isComplete: Boolean = false
     ): PostScreen()
     data class Detail(
         val description: String = ""
@@ -22,7 +26,7 @@ sealed class PostScreen {
                 "add"
             }
             is Edit -> {
-                "edit/${this.id}/${this.description}"
+                "edit/${this.id}/${this.description}/${this.createdOn.time}/${this.isComplete}"
             }
             is Detail -> {
                 "detail/${this.description}"
@@ -37,7 +41,7 @@ sealed class PostScreen {
                 "add"
             }
             is Edit -> {
-                "edit/{id}/{description}"
+                "edit/{id}/{description}/{createdOn}/{isComplete}"
             }
             is Detail -> {
                 "detail/{description}"

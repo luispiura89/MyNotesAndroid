@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import com.example.mynotes.myposts.MainLayout
 import com.example.mynotes.myposts.composables.PostListAction
 import com.example.mynotes.myposts.PostsViewModel
+import com.example.mynotes.myposts.composables.PostsListState
 
 fun NavGraphBuilder.main(
     navigationController: NavHostController,
@@ -14,7 +15,7 @@ fun NavGraphBuilder.main(
 ) {
     composable(route = PostScreen.Main.routeDefinition) {
         MainLayout(
-            state = viewModel.uiState.collectAsState().value,
+            state = viewModel.uiState.collectAsState(initial = PostsListState()).value,
             onFetchPosts = {
                 viewModel.fetchPosts()
             }
@@ -35,7 +36,10 @@ fun NavGraphBuilder.main(
                     navigationController.navigate(
                         PostScreen.Edit(
                             id = action.post.id.toString(),
-                            description = action.post.description)
+                            description = action.post.description,
+                            createdOn = action.post.createdOn,
+                            isComplete = action.post.isComplete
+                        )
                             .route
                     )
                 }
