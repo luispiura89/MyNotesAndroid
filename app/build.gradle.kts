@@ -3,6 +3,8 @@ import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    // To use Kotlin annotation processing tool (kapt)
+    // in this case required by `Room`
     kotlin("kapt")
 }
 
@@ -33,10 +35,16 @@ android {
         }
     }
     compileOptions {
+        /*
+        `kapt` required to upgrade the java version to `17`
+         */
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
+        /*
+        `kapt` required to upgrade the java version to `17`
+         */
         jvmTarget = "17"
     }
     buildFeatures {
@@ -58,7 +66,8 @@ dependencies {
     val room_version = "2.5.0"
 
     implementation("androidx.room:room-runtime:$room_version")
-    annotationProcessor("androidx.room:room-compiler:$room_version")// To use Kotlin annotation processing tool (kapt)
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+    // To use Kotlin annotation processing tool (kapt)
     kapt("androidx.room:room-compiler:$room_version")
     implementation("androidx.room:room-ktx:$room_version")
 

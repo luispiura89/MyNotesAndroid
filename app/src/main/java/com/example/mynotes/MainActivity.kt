@@ -18,6 +18,7 @@ import com.example.mynotes.myposts.composables.PostsListState
 import com.example.mynotes.ui.theme.MyNotesTheme
 
 class MainActivity : ComponentActivity() {
+    // Room database creation
     private val db by lazy {
         Room.databaseBuilder(
             applicationContext,
@@ -25,6 +26,10 @@ class MainActivity : ComponentActivity() {
             "posts.db"
         ).build()
     }
+    /*
+    Given this view model receives the dao as a parameter the only way to instantiate it
+    is with a `factoryProducer` in order to inject the dao
+     */
     private val viewModel by viewModels<PostsViewModel>(
         factoryProducer = {
             object: ViewModelProvider.Factory {

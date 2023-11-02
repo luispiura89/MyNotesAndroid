@@ -1,6 +1,5 @@
 package com.example.mynotes.myposts
 
-import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mynotes.database.LocalPost
@@ -10,10 +9,9 @@ import com.example.mynotes.myposts.coroutines.MyAsyncClass
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flatMapMerge
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.Date
@@ -26,21 +24,29 @@ class PostsViewModel(
     private val myObject = MyAsyncClass()
     private var _uiState = MutableStateFlow(PostsListState())
     private val _localPosts = dao.getPosts()
-    val uiState = _localPosts.flatMapMerge { localPosts ->
-        _uiState.update {
-            it.copy(
-                posts = localPosts.map { localPost ->
-                    Post(
-                        id = UUID.fromString(localPost.id),
-                        description = localPost.description,
-                        isComplete = localPost.isComplete,
-                        createdOn = Date(localPost.creationDate)
-                    )
-                }
-            )
-        }
-        _uiState.asStateFlow()
+
+    /**
+     * The `combine` function take `n` number of Flow<Any> and returns a
+     * Flow<TheTypeYouWant>
+     * The `stateIn` function converts a Flow<AnyType> into a StateFlow<AnyType>
+     */
+    val uiState = combine(_uiState, _localPosts) { state, posts ->
+        state.copy(
+            posts = posts.map { localPost ->
+                Post(
+                    id = UUID.fromString(localPost.id),
+                    description = localPost.description,
+                    isComplete = localPost.isComplete,
+                    createdOn = Date(localPost.creationDate)
+                )
+            }
+        )
     }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            PostsListState()
+        )
 
     fun add(post: Post) {
         upsert(post)
