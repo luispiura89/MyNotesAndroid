@@ -6,25 +6,23 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.example.mynotes.myposts.MainLayout
 import com.example.mynotes.myposts.composables.PostListAction
-import com.example.mynotes.myposts.PostsViewModel
+import com.example.mynotes.myposts.composables.PostsListState
 
 fun NavGraphBuilder.main(
     navigationController: NavHostController,
-    viewModel: PostsViewModel
+    state: PostsListState,
+    onAction: (PostListAction) -> Unit
 ) {
     composable(route = PostScreen.Main.routeDefinition) {
         MainLayout(
-            state = viewModel.uiState.collectAsState().value,
+            state = state,
             onFetchPosts = {
-                viewModel.fetchPosts()
+                onAction(PostListAction.FetchPosts)
             }
         ) { action ->
             when (action) {
-                PostListAction.Add -> {
+                is PostListAction.Add -> {
                     navigationController.navigate(PostScreen.Add.routeDefinition)
-                }
-                is PostListAction.Remove -> {
-                    viewModel.remove(action.post)
                 }
                 is PostListAction.Select -> {
                     navigationController.navigate(
@@ -42,11 +40,8 @@ fun NavGraphBuilder.main(
                             .route
                     )
                 }
-                is PostListAction.MarkAsComplete -> {
-                    viewModel.markPostAsComplete(action.post)
-                }
-                is PostListAction.MarkAsIncomplete -> {
-                    viewModel.markPostAsIncomplete(action.post)
+                else -> {
+                    onAction(action)
                 }
             }
         }

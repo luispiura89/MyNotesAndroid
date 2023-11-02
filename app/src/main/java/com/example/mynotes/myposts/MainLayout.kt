@@ -46,7 +46,7 @@ fun MainLayout(
                 Text(text = "Fetch posts")
             }
             Button(onClick = {
-                onAction(PostListAction.Add)
+                onAction(PostListAction.Add())
             }) {
                 Text(text = "Add")
             }

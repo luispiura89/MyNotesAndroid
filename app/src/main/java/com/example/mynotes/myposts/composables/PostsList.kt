@@ -24,12 +24,13 @@ fun PostsList(
 }
 
 sealed class PostListAction {
-    object Add : PostListAction()
+    data class Add(val post: Post? = null) : PostListAction()
     data class Select(val post: Post): PostListAction()
     data class Edit(val post: Post): PostListAction()
     data class Remove(val post: Post): PostListAction()
     data class MarkAsComplete(val post: Post): PostListAction()
     data class MarkAsIncomplete(val post: Post): PostListAction()
+    object FetchPosts: PostListAction()
 }
 
 data class PostsListState(

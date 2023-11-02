@@ -7,12 +7,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.mynotes.myposts.composables.PostForm
 import com.example.mynotes.myposts.composables.PostFormAction
-import com.example.mynotes.myposts.PostsViewModel
+import com.example.mynotes.myposts.composables.PostListAction
 import java.util.Date
 
 fun NavGraphBuilder.editPost(
     navigationController: NavHostController,
-    viewModel: PostsViewModel
+    onAction: (PostListAction) -> Unit
 ) {
     composable(
         route = PostScreen.Edit().routeDefinition,
@@ -43,7 +43,7 @@ fun NavGraphBuilder.editPost(
             action = PostFormAction.EDIT
         ) { result ->
             if (result.action == PostFormAction.EDIT) {
-                viewModel.update(result.post)
+                onAction(PostListAction.Edit(post = result.post))
             }
             navigationController.popBackStack()
         }

@@ -5,11 +5,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.example.mynotes.myposts.composables.PostForm
 import com.example.mynotes.myposts.composables.PostFormAction
-import com.example.mynotes.myposts.PostsViewModel
+import com.example.mynotes.myposts.composables.PostListAction
 
 fun NavGraphBuilder.addPost(
     navigationController: NavHostController,
-    viewModel: PostsViewModel
+    onAction: (PostListAction) -> Unit
 ) {
     composable(route = PostScreen.Add.routeDefinition) {
         PostForm(
@@ -19,7 +19,7 @@ fun NavGraphBuilder.addPost(
             action = PostFormAction.ADD,
         ) { result ->
             if (result.action == PostFormAction.ADD) {
-                viewModel.add(result.post)
+                onAction(PostListAction.Add(post = result.post))
             }
             navigationController.popBackStack()
         }

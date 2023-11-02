@@ -4,8 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mynotes.database.LocalPost
 import com.example.mynotes.database.LocalPostsDao
+import com.example.mynotes.myposts.composables.PostListAction
 import com.example.mynotes.myposts.composables.PostsListState
 import com.example.mynotes.myposts.coroutines.MyAsyncClass
+import com.example.mynotes.navigation.PostScreen
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -48,21 +50,42 @@ class PostsViewModel(
             PostsListState()
         )
 
-    fun add(post: Post) {
+    fun handle(action: PostListAction) {
+        when(action) {
+            is PostListAction.Remove -> {
+                remove(action.post)
+            }
+            is PostListAction.MarkAsComplete -> {
+                markPostAsComplete(action.post)
+            }
+            is PostListAction.MarkAsIncomplete -> {
+                markPostAsIncomplete(action.post)
+            }
+            is PostListAction.Edit -> {
+                update(action.post)
+            }
+            is PostListAction.Add -> {
+                action.post?.let {
+                    add(it)
+                }
+            }
+            is PostListAction.FetchPosts -> {
+                fetchPosts()
+            }
+            else -> {}
+        }
+    }
+    private fun add(post: Post) {
         upsert(post)
     }
 
     private fun add(posts: List<Post>) {
-        _uiState.update { state ->
-            state.copy(
-                posts = _uiState.value.posts.toMutableList().also {
-                    it.addAll(0, posts)
-                }
-            )
+        posts.forEach {
+            add(it)
         }
     }
 
-    fun remove(post: Post) {
+    private fun remove(post: Post) {
         viewModelScope.launch {
             dao.delete(
                 LocalPost(
@@ -75,18 +98,18 @@ class PostsViewModel(
         }
     }
 
-    fun markPostAsComplete(post: Post) {
+    private fun markPostAsComplete(post: Post) {
         update(post.copy(isComplete = true))
     }
-    fun markPostAsIncomplete(post: Post) {
+    private fun markPostAsIncomplete(post: Post) {
         update(post.copy(isComplete = false))
     }
 
-    fun update(post: Post) {
+    private fun update(post: Post) {
         upsert(post)
     }
 
-    fun fetchPosts() {
+    private fun fetchPosts() {
         viewModelScope.launch(Dispatchers.IO) {
             val posts1 = async { myObject.fetchPostsFirstPage() }
             val posts2 = async { myObject.fetchPostsSecondPage() }
