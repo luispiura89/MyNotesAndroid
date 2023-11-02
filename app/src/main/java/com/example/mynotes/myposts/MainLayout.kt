@@ -9,14 +9,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.mynotes.myposts.composables.EmptyPostsPlaceholder
+import com.example.mynotes.myposts.composables.FilterBy
 import com.example.mynotes.myposts.composables.PostListAction
 import com.example.mynotes.myposts.composables.PostsList
 import com.example.mynotes.myposts.composables.PostsListState
@@ -29,7 +30,6 @@ fun MainLayout(
     onFetchPosts: () -> Unit,
     onAction: (PostListAction) -> Unit
 ) {
-    val scope = rememberCoroutineScope()
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -49,6 +49,32 @@ fun MainLayout(
                 onAction(PostListAction.Add())
             }) {
                 Text(text = "Add")
+            }
+        }
+        Row(
+            modifier = modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Start
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                RadioButton(
+                    selected = state.onlyCompletePosts,
+                    onClick = { onAction(PostListAction.Filter(filteredBy = FilterBy.COMPLETE)) }
+                )
+                Text(text = "Completed")
+            }
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                RadioButton(
+                    selected = state.allPosts,
+                    onClick = { onAction(PostListAction.Filter(filteredBy = FilterBy.ALL)) }
+                )
+                Text(text = "All")
+            }
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                RadioButton(
+                    selected = state.onlyPendingPosts,
+                    onClick = { onAction(PostListAction.Filter(filteredBy = FilterBy.PENDING)) }
+                )
+                Text(text = "Pending")
             }
         }
         Spacer(modifier = modifier.height(15.dp))

@@ -4,15 +4,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mynotes.database.LocalPost
 import com.example.mynotes.database.LocalPostsDao
+import com.example.mynotes.myposts.composables.FilterBy
 import com.example.mynotes.myposts.composables.PostListAction
 import com.example.mynotes.myposts.composables.PostsListState
 import com.example.mynotes.myposts.coroutines.MyAsyncClass
-import com.example.mynotes.navigation.PostScreen
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -24,15 +25,28 @@ class PostsViewModel(
 ): ViewModel() {
 
     private val myObject = MyAsyncClass()
+    private val _filterByComplete = MutableStateFlow(FilterBy.ALL)
     private var _uiState = MutableStateFlow(PostsListState())
-    private val _localPosts = dao.getPosts()
+    private val _localPosts = _filterByComplete.flatMapLatest { filter ->
+        when(filter) {
+            FilterBy.COMPLETE -> {
+                dao.getCompletedPosts()
+            }
+            FilterBy.ALL -> {
+                dao.getPosts()
+            }
+            FilterBy.PENDING -> {
+                dao.getPendingPosts()
+            }
+        }
+    }
 
     /**
      * The `combine` function take `n` number of Flow<Any> and returns a
      * Flow<TheTypeYouWant>
      * The `stateIn` function converts a Flow<AnyType> into a StateFlow<AnyType>
      */
-    val uiState = combine(_uiState, _localPosts) { state, posts ->
+    val uiState = combine(_uiState, _localPosts, _filterByComplete) { state, posts, filter ->
         state.copy(
             posts = posts.map { localPost ->
                 Post(
@@ -41,7 +55,10 @@ class PostsViewModel(
                     isComplete = localPost.isComplete,
                     createdOn = Date(localPost.creationDate)
                 )
-            }
+            },
+            onlyCompletePosts = filter == FilterBy.COMPLETE,
+            onlyPendingPosts = filter == FilterBy.PENDING,
+            allPosts = filter == FilterBy.ALL
         )
     }
         .stateIn(
@@ -71,6 +88,12 @@ class PostsViewModel(
             }
             is PostListAction.FetchPosts -> {
                 fetchPosts()
+            }
+            is PostListAction.Filter -> {
+                _filterByComplete.update {
+                    _filterByComplete.value = action.filteredBy
+                    it
+                }
             }
             else -> {}
         }

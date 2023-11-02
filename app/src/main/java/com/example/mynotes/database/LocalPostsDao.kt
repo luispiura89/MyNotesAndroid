@@ -16,4 +16,10 @@ interface LocalPostsDao {
 
     @Query("SELECT * from localpost order by creationDate desc")
     fun getPosts(): Flow<List<LocalPost>>
+
+    @Query("SELECT * from localpost where isComplete = 1 order by creationDate desc")
+    fun getCompletedPosts(): Flow<List<LocalPost>>
+
+    @Query("SELECT * from localpost where isComplete = 0 order by creationDate desc")
+    fun getPendingPosts(): Flow<List<LocalPost>>
 }

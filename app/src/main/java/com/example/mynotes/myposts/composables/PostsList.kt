@@ -31,10 +31,20 @@ sealed class PostListAction {
     data class MarkAsComplete(val post: Post): PostListAction()
     data class MarkAsIncomplete(val post: Post): PostListAction()
     object FetchPosts: PostListAction()
+    data class Filter(
+        val filteredBy: FilterBy = FilterBy.ALL
+    ): PostListAction()
+}
+
+enum class FilterBy {
+    ALL, COMPLETE, PENDING
 }
 
 data class PostsListState(
-    val posts: List<Post> = emptyList()
+    val posts: List<Post> = emptyList(),
+    val onlyCompletePosts: Boolean = false,
+    var onlyPendingPosts: Boolean = false,
+    var allPosts: Boolean = false
 )
 
 @Preview(showBackground = true)
