@@ -3,12 +3,14 @@ package com.example.mynotes.myposts
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mynotes.database.LocalPost
+import com.example.mynotes.database.LocalPostChangeLog
 import com.example.mynotes.database.LocalPostsDao
 import com.example.mynotes.myposts.composables.FilterBy
 import com.example.mynotes.myposts.composables.PostListAction
 import com.example.mynotes.myposts.composables.PostsListState
 import com.example.mynotes.myposts.coroutines.MyAsyncClass
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -27,6 +29,7 @@ class PostsViewModel(
     private val myObject = MyAsyncClass()
     private val _filterByComplete = MutableStateFlow(FilterBy.ALL)
     private var _uiState = MutableStateFlow(PostsListState())
+    @OptIn(ExperimentalCoroutinesApi::class)
     private val _localPosts = _filterByComplete.flatMapLatest { filter ->
         when(filter) {
             FilterBy.COMPLETE -> {
@@ -149,6 +152,13 @@ class PostsViewModel(
                     description = post.description,
                     isComplete = post.isComplete,
                     creationDate = post.createdOn.time
+                )
+            )
+            val changeLogCount = dao.getPostChangeLog(post.id.toString()).size
+            dao.upsertLog(
+                LocalPostChangeLog(
+                    changeType = if (changeLogCount == 0) "created" else "updated",
+                    postId = post.id.toString()
                 )
             )
         }

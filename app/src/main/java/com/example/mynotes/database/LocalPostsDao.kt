@@ -11,6 +11,9 @@ interface LocalPostsDao {
     @Upsert
     suspend fun upsert(post: LocalPost)
 
+    @Upsert
+    suspend fun upsertLog(log: LocalPostChangeLog)
+
     @Delete
     suspend fun delete(post: LocalPost)
 
@@ -22,4 +25,7 @@ interface LocalPostsDao {
 
     @Query("SELECT * from localpost where isComplete = 0 order by creationDate desc")
     fun getPendingPosts(): Flow<List<LocalPost>>
+
+    @Query("SELECT * from localpostchangelog where postId = :postId")
+    suspend fun getPostChangeLog(postId: String): List<LocalPostChangeLog>
 }
