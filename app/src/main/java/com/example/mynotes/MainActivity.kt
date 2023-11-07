@@ -10,6 +10,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.room.Room
+import com.example.mynotes.api.PostsService
 import com.example.mynotes.database.LocalPostDataBase
 import com.example.mynotes.myposts.MainLayout
 import com.example.mynotes.myposts.Post
@@ -35,7 +36,7 @@ class MainActivity : ComponentActivity() {
         factoryProducer = {
             object: ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return PostsViewModel(db.localPostsDao) as T
+                    return PostsViewModel(db.localPostsDao, PostsService.retrofitProvider()) as T
                 }
             }
         }

@@ -2,6 +2,8 @@ package com.example.mynotes.myposts
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.mynotes.api.PostsApi
+import com.example.mynotes.api.RemotePost
 import com.example.mynotes.database.LocalPost
 import com.example.mynotes.database.LocalPostChangeLog
 import com.example.mynotes.database.LocalPostsDao
@@ -9,9 +11,7 @@ import com.example.mynotes.myposts.composables.FilterBy
 import com.example.mynotes.myposts.composables.PostListAction
 import com.example.mynotes.myposts.composables.PostsListState
 import com.example.mynotes.myposts.coroutines.MyAsyncClass
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -23,12 +23,33 @@ import java.util.Date
 import java.util.UUID
 
 class PostsViewModel(
-    private val dao: LocalPostsDao
+    private val dao: LocalPostsDao,
+    private val potsApi: PostsApi
 ): ViewModel() {
 
     private val myObject = MyAsyncClass()
     private val _filterByComplete = MutableStateFlow(FilterBy.ALL)
     private var _uiState = MutableStateFlow(PostsListState())
+    private val _remotePosts = MutableStateFlow(listOf<RemotePost>())
+    private val _filteredRemotePosts = combine(_filterByComplete, _remotePosts) { filter, posts ->
+        when(filter) {
+            FilterBy.COMPLETE -> {
+                posts.filter {
+                    it.completed
+                }
+            }
+            FilterBy.ALL -> {
+                posts
+            }
+            FilterBy.PENDING -> {
+                posts.filter {
+                    !it.completed
+                }
+            }
+        }
+    }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
     @OptIn(ExperimentalCoroutinesApi::class)
     private val _localPosts = _filterByComplete.flatMapLatest { filter ->
         when(filter) {
@@ -49,16 +70,28 @@ class PostsViewModel(
      * Flow<TheTypeYouWant>
      * The `stateIn` function converts a Flow<AnyType> into a StateFlow<AnyType>
      */
-    val uiState = combine(_uiState, _localPosts, _filterByComplete) { state, posts, filter ->
+    val uiState = combine(
+        _uiState, _localPosts, _filteredRemotePosts, _filterByComplete
+    ) { state, localPosts, remotePosts, filter ->
         state.copy(
-            posts = posts.map { localPost ->
+            posts = localPosts.map { localPost ->
                 Post(
                     id = UUID.fromString(localPost.id),
                     description = localPost.description,
                     isComplete = localPost.isComplete,
                     createdOn = Date(localPost.creationDate)
                 )
-            },
+            }
+                .toMutableList()
+                .also {
+                    it.addAll(remotePosts.map { remotePost ->
+                        Post(
+                            description = remotePost.title,
+                            isComplete = remotePost.completed,
+                            createdOn = Date()
+                        )
+                    })
+                },
             onlyCompletePosts = filter == FilterBy.COMPLETE,
             onlyPendingPosts = filter == FilterBy.PENDING,
             allPosts = filter == FilterBy.ALL
@@ -136,11 +169,19 @@ class PostsViewModel(
     }
 
     private fun fetchPosts() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val posts1 = async { myObject.fetchPostsFirstPage() }
-            val posts2 = async { myObject.fetchPostsSecondPage() }
-            add(posts1.await())
-            add(posts2.await())
+//        viewModelScope.launch(Dispatchers.IO) {
+//            val posts1 = async { myObject.fetchPostsFirstPage() }
+//            val posts2 = async { myObject.fetchPostsSecondPage() }
+//            add(posts1.await())
+//            add(posts2.await())
+//        }
+        viewModelScope.launch {
+            val posts = potsApi.getPosts()
+            _remotePosts.update {
+                _remotePosts.value = posts
+                it
+            }
+
         }
     }
 
