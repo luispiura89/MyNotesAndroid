@@ -3,6 +3,7 @@ package com.example.mynotes.myposts
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mynotes.api.PostsApi
+import com.example.mynotes.api.PostsRepository
 import com.example.mynotes.api.RemotePost
 import com.example.mynotes.database.LocalPost
 import com.example.mynotes.database.LocalPostChangeLog
@@ -11,6 +12,7 @@ import com.example.mynotes.myposts.composables.FilterBy
 import com.example.mynotes.myposts.composables.PostListAction
 import com.example.mynotes.myposts.composables.PostsListState
 import com.example.mynotes.myposts.coroutines.MyAsyncClass
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -21,10 +23,11 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.Date
 import java.util.UUID
+import javax.inject.Inject
 
-class PostsViewModel(
-    private val dao: LocalPostsDao,
-    private val potsApi: PostsApi
+@HiltViewModel
+class PostsViewModel @Inject constructor(
+    private val repository: PostsRepository
 ): ViewModel() {
 
     private val myObject = MyAsyncClass()
@@ -54,13 +57,13 @@ class PostsViewModel(
     private val _localPosts = _filterByComplete.flatMapLatest { filter ->
         when(filter) {
             FilterBy.COMPLETE -> {
-                dao.getCompletedPosts()
+                repository.getCompletedLocalPosts()
             }
             FilterBy.ALL -> {
-                dao.getPosts()
+                repository.getAllLocalPosts()
             }
             FilterBy.PENDING -> {
-                dao.getPendingPosts()
+                repository.getPendingLocalPosts()
             }
         }
     }
@@ -146,7 +149,7 @@ class PostsViewModel(
 
     private fun remove(post: Post) {
         viewModelScope.launch {
-            dao.delete(
+            repository.deleteLocalPost(
                 LocalPost(
                     id = post.id.toString(),
                     description = post.description,
@@ -176,7 +179,7 @@ class PostsViewModel(
 //            add(posts2.await())
 //        }
         viewModelScope.launch {
-            val posts = potsApi.getPosts()
+            val posts = repository.fetchPosts()
             _remotePosts.update {
                 _remotePosts.value = posts
                 it
@@ -187,7 +190,7 @@ class PostsViewModel(
 
     private fun upsert(post: Post) {
         viewModelScope.launch {
-            dao.upsert(
+            repository.addLocalPost(
                 LocalPost(
                     id = post.id.toString(),
                     description = post.description,
@@ -195,8 +198,8 @@ class PostsViewModel(
                     creationDate = post.createdOn.time
                 )
             )
-            val changeLogCount = dao.getPostChangeLog(post.id.toString()).size
-            dao.upsertLog(
+            val changeLogCount = repository.getPostChangeLog(post.id.toString()).size
+            repository.addLocalPostLog(
                 LocalPostChangeLog(
                     changeType = if (changeLogCount == 0) "created" else "updated",
                     postId = post.id.toString()

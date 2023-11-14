@@ -15,20 +15,6 @@ interface PostsApi {
 
 }
 
-object PostsService {
-    fun retrofitProvider(): PostsApi {
-        val client = OkHttpClient.Builder()
-            .addInterceptor(AuthInterceptor())
-            .build()
-        return Retrofit.Builder()
-            .baseUrl("https://jsonplaceholder.typicode.com/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(client)
-            .build()
-            .create(PostsApi::class.java)
-    }
-}
-
 class AuthInterceptor: Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
