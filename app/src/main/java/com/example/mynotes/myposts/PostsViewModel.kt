@@ -2,12 +2,10 @@ package com.example.mynotes.myposts
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.mynotes.api.PostsApi
 import com.example.mynotes.api.PostsRepository
 import com.example.mynotes.api.RemotePost
 import com.example.mynotes.database.LocalPost
 import com.example.mynotes.database.LocalPostChangeLog
-import com.example.mynotes.database.LocalPostsDao
 import com.example.mynotes.myposts.composables.FilterBy
 import com.example.mynotes.myposts.composables.PostListAction
 import com.example.mynotes.myposts.composables.PostsListState

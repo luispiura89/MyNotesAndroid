@@ -39,13 +39,14 @@ class MainActivity : ComponentActivity() {
 //        }
 //    )
 
-    private val viewModel: PostsViewModel by viewModels()
+//    This line was replaced with the hilt navigation dependency
+//    private val viewModel: PostsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MyNotesTheme {
-                PostsFlow(viewModel.uiState.collectAsState().value, viewModel::handle)
+                PostsFlow()
             }
         }
     }

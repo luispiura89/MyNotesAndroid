@@ -1,21 +1,22 @@
 package com.example.mynotes.navigation
 
 import androidx.compose.runtime.collectAsState
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.example.mynotes.myposts.MainLayout
+import com.example.mynotes.myposts.PostsViewModel
 import com.example.mynotes.myposts.composables.PostListAction
-import com.example.mynotes.myposts.composables.PostsListState
 
 fun NavGraphBuilder.main(
-    navigationController: NavHostController,
-    state: PostsListState,
-    onAction: (PostListAction) -> Unit
+    navigationController: NavHostController
 ) {
     composable(route = PostScreen.Main.routeDefinition) {
+        val viewModel = hiltViewModel<PostsViewModel>()
+        val onAction = viewModel::handle
         MainLayout(
-            state = state,
+            state = viewModel.uiState.collectAsState().value,
             onFetchPosts = {
                 onAction(PostListAction.FetchPosts)
             }
