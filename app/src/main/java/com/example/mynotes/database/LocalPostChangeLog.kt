@@ -2,10 +2,14 @@ package com.example.mynotes.database
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import java.util.Date
 
 @Entity(
+    indices = [
+        Index(value = ["postId"])
+    ],
     foreignKeys = [
         ForeignKey(
             entity = LocalPost::class,
